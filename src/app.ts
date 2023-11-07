@@ -1,14 +1,32 @@
+// import express from 'express';
+// // import cors from 'cors';
+// import imageRoutes from './routes/imageRoutes';
+// import errorMiddleware from './middleware/errorMiddleware';
+
+// const app = express();
+// const port = process.env.PORT || 3000;
+
+// // app.use(cors());
+// app.use(express.json());
+
+// // API Routes
+// app.use('/api/images', imageRoutes);
+
+// // Error handling middleware
+// app.use(errorMiddleware);
+
+// export default app;
+
 import express from 'express';
+import imageRoutes from './routes/imageRoutes';
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
-// Middleware
-app.use(express.json()); // JSON body parser middleware
-app.use(express.urlencoded({ extended: true })); // URL-encoded body parser middleware
+app.use(express.json());
 
-// Your middleware configurations and route setups can go here
+// API Routes
+app.use('/api/images', imageRoutes);
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+export default app;
+
