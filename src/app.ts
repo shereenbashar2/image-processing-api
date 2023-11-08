@@ -1,32 +1,22 @@
-// import express from 'express';
-// // import cors from 'cors';
-// import imageRoutes from './routes/imageRoutes';
-// import errorMiddleware from './middleware/errorMiddleware';
-
-// const app = express();
-// const port = process.env.PORT || 3000;
-
-// // app.use(cors());
-// app.use(express.json());
-
-// // API Routes
-// app.use('/api/images', imageRoutes);
-
-// // Error handling middleware
-// app.use(errorMiddleware);
-
-// export default app;
-
+// configures the Express application. It defines the middleware, routes, and other configurations.
+// src/app.ts
 import express from 'express';
+import multer from 'multer';
 import imageRoutes from './routes/imageRoutes';
 
 const app = express();
-const port = process.env.PORT || 3000;
 
+// Multer Configuration
+const storage = multer.memoryStorage(); // Store files in memory
+const upload = multer({ storage: storage });
+
+// Use 'upload' middleware to handle file uploads
+app.use(upload.single('file')); // 'file' is the field name in the form
+
+// Middleware
 app.use(express.json());
 
 // API Routes
 app.use('/api/images', imageRoutes);
 
 export default app;
-
