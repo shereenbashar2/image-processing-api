@@ -1,12 +1,12 @@
 import express from 'express';
-import multer from 'multer';
 import path from 'path'; // for working with file paths
 import imageRoutes from './routes/imageRoutes';
 import uploadRoutes from './routes/uploadRoutes';
 
 const app = express();
 
-
+// Middleware to serve static files (like index.html)
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Middleware
 app.use(express.json());

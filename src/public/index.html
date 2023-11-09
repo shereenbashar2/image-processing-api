@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const imageUploadForm = document.getElementById("imageUploadForm");
+            const imageInput = document.getElementById("imageInput");
+            const uploadButton = document.getElementById("uploadButton");
+            const status = document.getElementById("status");
+    
+            uploadButton.addEventListener("click", () => {
+                console.log("Upload");
+                const formData = new FormData();
+                formData.append("file", imageInput.files[0]);
+    
+                fetch("/api/images/upload", {
+                    method: "POST",
+                    body: formData,
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        status.innerHTML = data.message;
+                    })
+                    .catch((error) => {
+                        status.innerHTML = "Error: " + error.message;
+                    });
+            });
+        });
+    </script>
+
+<style>
+    /* Style for the file input */
+ 
+
+    /* Style for the button */
+    button {
+        background-color: #3498db;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #2980b9;
+    }
+</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload</title>
+</head>
+<body>
+    <h1>Image Upload</h1>
+    <form id="imageUploadForm" enctype="multipart/form-data">
+        <input type="file" id="imageInput" name="file" accept="image/*">
+        
+        <button type="button" id="uploadButton">Upload Image</button>
+    </form>
+    <div id="status"></div>
+</body>
+</html>
+
