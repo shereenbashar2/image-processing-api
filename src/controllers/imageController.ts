@@ -4,11 +4,16 @@ import path from 'path';
 import { resizeImage, ImageFormat } from '../services/imageProcessing'; // Import the imageProcessing utility
 import { getFromCache, addToCache } from '../services/ImageCache'; // Import cache functions
 import fs from 'fs/promises'; // Import the fs module for file operations
+import logger from '../utils/logger';
 
 export const processImage = async (req: Request, res: Response) => {
   try {
     // Read processing options and imageName from query parameters
     const { width, height, imageName, format , quality} = req.query;
+
+    // Log that an image processing request has been received
+    logger.info(`Image processing request received: ${imageName}`)
+
     // Ensure that the 'format' parameter is of type ImageFormat or default to JPEG
     const imageFormat: ImageFormat =
       (format as ImageFormat) || ImageFormat.JPEG;
@@ -33,6 +38,7 @@ export const processImage = async (req: Request, res: Response) => {
       const cachedImagePath = getFromCache(cacheKey);
 
       if (cachedImagePath) {
+        logger.info(`Image found in cache: ${imageName}`);
         res.type(`image/${format || 'jpg'}`); // Use 'jpeg' as default format
         return res.sendFile(cachedImagePath); // Send the cached image as a response
       }
@@ -63,7 +69,8 @@ export const processImage = async (req: Request, res: Response) => {
         imageFormat,
         imageQuality
       );
-
+    // Log that the image has been processed
+    logger.info(`Image processed: ${imageName}`)
       // Define the file path to save the processed image
       const outputDirectory = '../assets/thumbnail'; // Change to your directory name
       const outputFileName = `thumbnail_${imageName}_${imageQuality}_${processingOptions.width}_${processingOptions.height}.${format || 'jpg'}`; // Unique file name
@@ -87,6 +94,8 @@ export const processImage = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Invalid image name' });
     }
   } catch (error) {
+    logger.error(`Image processing and saving error: ${error}`);
+
     console.error('Image processing and saving error:', error);
     res.status(500).json({ error: 'Image processing and saving error' });
   }

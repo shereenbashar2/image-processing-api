@@ -15,8 +15,10 @@
     "jasmine-spec-reporter": "^7.0.0",
     "nodemon": "^3.0.1",
     "prettier": "^3.0.3",
+    "supertest": "^6.3.3",
     "ts-node": "^10.9.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "winston": "^3.11.0"
   },
   "scripts": {
     "start": "nodemon src/server.ts",
