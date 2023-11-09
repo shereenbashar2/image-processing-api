@@ -45,8 +45,8 @@ npm-debug.log
 yarn-debug.log
 yarn-error.log
 
-# Test files
-coverage/
-__tests__/
-*.spec.ts
-*.spec.js
+# # Test files
+# coverage/
+# __tests__/
+# *.spec.ts
+# *.spec.js
