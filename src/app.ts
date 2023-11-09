@@ -10,8 +10,8 @@ const app = express();
 const storage = multer.memoryStorage(); // Store files in memory
 const upload = multer({ storage: storage });
 
-// Use 'upload' middleware to handle file uploads
-app.use(upload.single('file')); // 'file' is the field name in the form
+// // Use 'upload' middleware to handle file uploads
+// app.use(upload.single('file')); // 'file' is the field name in the form
 
 // Middleware
 app.use(express.json());

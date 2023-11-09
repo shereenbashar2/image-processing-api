@@ -5,9 +5,33 @@ import { resizeImage, ImageFormat } from '../services/imageProcessing'; // Impor
 import { getFromCache, addToCache } from '../services/ImageCache'; // Import cache functions
 import fs from 'fs/promises'; // Import the fs module for file operations
 import logger from '../utils/logger';
+import { validationResult, check } from 'express-validator';
 
 export const processImage = async (req: Request, res: Response) => {
   try {
+
+ // Define validation rules for query parameters
+ const validationRules = [
+  check('width').optional().isInt({ min: 50, max: 300 }).toInt(),
+  check('height').optional().isInt({ min: 50, max: 300 }).toInt(),
+  check('imageName').notEmpty(),
+  check('format').optional().isIn(['jpg', 'jpeg', 'png']), // Adjust the allowed formats
+// Add validation rule for 'quality'
+check('quality')
+  .optional()
+  .isInt({ min: 0, max: 100 })
+  .toInt(),
+
+];
+
+// Run the validation rules
+await Promise.all(validationRules.map(validation => validation.run(req)));
+
+// Check for validation errors
+const errors = validationResult(req);
+if (!errors.isEmpty()) {
+  return res.status(400).json({ errors: errors.array() });
+}
     // Read processing options and imageName from query parameters
     const { width, height, imageName, format , quality} = req.query;
 
