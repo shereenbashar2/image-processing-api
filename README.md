@@ -40,8 +40,8 @@ git clone https://github.com/shereenbashar2/image-processing-api.git
 cd image-processing-server
 npm install
 
-Scripts
-Test
+#Scripts
+#Test
 Run tests using:
 npm test
 
