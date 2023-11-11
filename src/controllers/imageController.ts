@@ -6,6 +6,7 @@ import logger from '../utils/logger';
 import { resizeImage, ImageFormat } from '../services/imageProcessing';
 import { getFromCache, addToCache } from '../services/ImageCache';
 
+// Configuration settings
 const imageConfig = {
   originalPath: '../assets/original',
   thumbnailPath: '../assets/thumbnail',
@@ -13,6 +14,7 @@ const imageConfig = {
   defaultQuality: 80,
 };
 
+// Validation rules for image parameters
 const validateImageParameters = () => [
   check('width').optional().isInt({ min: 50, max: 300 }).toInt(),
   check('height').optional().isInt({ min: 50, max: 300 }).toInt(),
@@ -21,6 +23,7 @@ const validateImageParameters = () => [
   check('quality').optional().isInt({ min: 0, max: 100 }).toInt(),
 ];
 
+// Build file paths based on image parameters
 const buildPaths = (
   imageName: string,
   format: string,
@@ -48,6 +51,7 @@ const buildPaths = (
   return { originalImagePath, outputFileName, outputFilePath };
 };
 
+// Send a cached image response
 const sendCachedImage = (
   res: Response,
   format: string,
@@ -58,6 +62,7 @@ const sendCachedImage = (
   res.sendFile(cachedImagePath);
 };
 
+// Send a processed image response
 const sendProcessedImage = async (
   res: Response,
   imageName: string,
@@ -67,12 +72,15 @@ const sendProcessedImage = async (
   res.sendFile(outputFilePath);
 };
 
+// Handle validation errors
 const handleErrors = (res: Response, errors: any) => {
   return res.status(400).json({ errors: errors.array() });
 };
 
+// Controller to process and serve images
 export const processImage = async (req: Request, res: Response) => {
   try {
+    // Validate image parameters
     const validationRules = validateImageParameters();
     await Promise.all(validationRules.map((validation) => validation.run(req)));
 

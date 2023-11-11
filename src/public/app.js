@@ -7,21 +7,29 @@ document.addEventListener("DOMContentLoaded", () => {
     const qualityInput = document.getElementById("quality");
     const widthInput = document.getElementById("width");
     const heightInput = document.getElementById("height");
+
     const displayThumbnailImages = async () => {
         try {
             const response = await fetch("/api/images/thumbnails");
+            if (!response.ok) {
+                throw new Error(`Failed to fetch thumbnail images. Status: ${response.status}`);
+            }
+
             const thumbnailImages = await response.json();
 
             resizedImageContainer.innerHTML = "";
 
             thumbnailImages.forEach((thumbnailImage) => {
+                const { url, filename } = thumbnailImage;
                 const imgElement = document.createElement("img");
-                imgElement.src = thumbnailImage.url;
-                imgElement.alt = thumbnailImage.filename;
+                imgElement.src = url;
+                imgElement.alt = filename;
                 resizedImageContainer.appendChild(imgElement);
             });
         } catch (error) {
             console.error("Error fetching and displaying thumbnail images:", error.message);
+            // Display the error message in the UI
+            status.innerHTML = `Error: ${error.message}`;
         }
     };
 
@@ -35,11 +43,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: formData,
             });
 
-            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(`Failed to upload image. Status: ${response.status}`);
+            }
 
-            status.innerHTML = data.message;
+            const { message, file } = await response.json();
 
-            const { filename, extension } = extractFilenameAndExtension(data.file.filename);
+            status.innerHTML = message;
+
+            const { filename, extension } = extractFilenameAndExtension(file.filename);
             const quality = qualityInput.value || 80;
             const width = widthInput.value || 300;
             const height = heightInput.value || 300;
@@ -47,13 +59,19 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log("Original Image Filename:", filename);
             console.log("Image Extension:", extension);
 
-            await fetch(`/api/images/process-image?imageName=${filename}&format=${extension}&quality=${quality}&width=${width}&height=${height}`, {
+            const processImageResponse = await fetch(`/api/images/process-image?imageName=${filename}&format=${extension}&quality=${quality}&width=${width}&height=${height}`, {
                 method: "GET",
             });
 
+            if (!processImageResponse.ok) {
+                throw new Error(`Failed to process image. Status: ${processImageResponse.status}`);
+            }
+
             displayThumbnailImages();
         } catch (error) {
-            status.innerHTML = "Error: " + error.message;
+            console.error("Error handling image upload:", error.message);
+            // Display the error message in the UI
+            status.innerHTML = `Error: ${error.message}`;
         }
     };
 

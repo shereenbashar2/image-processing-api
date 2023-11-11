@@ -1,8 +1,18 @@
-// entry point for starting your Express server. It imports the Express application created in app.ts and starts the server on the specified port.
 import app from './app';
+import { Server } from 'http';
+
+/**
+ * Entry point for starting the Express server.
+ * @module server
+ * @exports {Server} server - The Express server instance.
+ */
 
 const port = process.env.PORT || 3000;
 
+/**
+ * The Express server instance.
+ * @type {Server}
+ */
 const server = app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

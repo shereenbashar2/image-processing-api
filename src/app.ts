@@ -1,33 +1,38 @@
 import express from 'express';
-import path from 'path'; // for working with file paths
+import path from 'path';
 import imageRoutes from './routes/imageRoutes';
 import uploadRoutes from './routes/uploadRoutes';
 import * as thumbnailController from './controllers/thumbnailController';
 
+/**
+ * Express application setup.
+ * @module app
+ * @exports {Express} app - The configured Express application instance.
+ */
 const app = express();
 
 // Middleware to serve static files (like index.html)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Middleware
+// Middleware for parsing JSON in requests
 app.use(express.json());
 
-// Serve static assets
-// const staticAssetsPath = path.join(__dirname, '..', 'assets/thumbnail');
-
+// Serve static assets for the 'thumbnail' route
 const staticAssetsPath = path.resolve(__dirname, '..', 'assets');
-
-const staticDir = path.join(__dirname, 'public');
-console.log('staticDir', staticDir);
-app.use(express.static(path.resolve(staticAssetsPath, 'thumbnail')));
-//   app.use(express.static(path.resolve(staticAssetsPath, 'thumbnail')));
-
 app.use('/assets/thumbnail', (req, res, next) => {
-  // res.setHeader('Cache-Control', 'public, max-age=31536000'); // Cache for 1 year
   express.static(path.resolve(staticAssetsPath, 'thumbnail'))(req, res, next);
 });
 
-// Define routes
+/**
+ * Route to get thumbnail images.
+ * @name GET/api/images/thumbnails
+ * @function
+ * @memberof module:app
+ * @inner
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {void}
+ */
 app.get('/api/images/thumbnails', (req, res) => {
   try {
     thumbnailController.getThumbnailImages(req, res);
@@ -37,7 +42,8 @@ app.get('/api/images/thumbnails', (req, res) => {
   }
 });
 
+// Define routes
 app.use('/api/images', uploadRoutes);
-
 app.use('/api/images', imageRoutes);
+
 export default app;
