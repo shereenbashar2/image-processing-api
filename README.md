@@ -35,12 +35,14 @@ Clone the repository and install dependencies:
 git clone https://github.com/shereenbashar2/image-processing-api.git
 cd image-processing-server
 npm install
+```
+## Scripts
 
-### Scripts
 ## Test
 Run tests using:
+```bash
 npm test
-
+```
 
 ## Start
 Start the server:
@@ -51,12 +53,16 @@ The server will be running at http://localhost:3000.
 
 ## Build
 Build the project:
+```bash
 npm run build
+```
 
 
 ## Test
 Test The project
+```bash
 npm run test
+```
 
 
 ### API Endpoints
