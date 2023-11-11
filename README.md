@@ -40,37 +40,37 @@ git clone https://github.com/shereenbashar2/image-processing-api.git
 cd image-processing-server
 npm install
 
-#Scripts
-#Test
+###Scripts
+##Test
 Run tests using:
 npm test
 
 
-Start
+##Start
 Start the server:
 npm start
 
 The server will be running at http://localhost:3000.
 
 
-Build
+##Build
 Build the project:
 npm run build
 
 
-Test
+##Test
 Test The project
 npm run test
 
 
-API Endpoints
+###API Endpoints
 
-Upload Image
+##Upload Image
 Description: Upload an image for processing.
 Method: POST
 Path: /api/images/upload
 
-Process Image
+##Process Image
 Description: Process an uploaded image with custom settings.
 Method: GET
 Path: /api/images/process-image
@@ -81,7 +81,7 @@ quality (number): Quality of the processed image (0 to 100)
 width (number): Width of the processed image
 height (number): Height of the processed image
 
-Get Thumbnail Images
+##Get Thumbnail Images
 Description: Retrieve a list of thumbnail images.
 Method: GET
 Path: /api/images/thumbnails
