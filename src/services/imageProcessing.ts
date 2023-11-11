@@ -11,7 +11,7 @@ export const resizeImage = async (
   inputFilePath: string,
   options: { width: number; height: number },
   format: ImageFormat = ImageFormat.JPG, // Specify the format as an ImageFormat with a default value
-  quality: number // Image quality (e.g., 80)
+  quality: number, // Image quality (e.g., 80)
 ): Promise<Buffer> => {
   try {
     const processedImageBuffer = await sharp(inputFilePath)
@@ -19,7 +19,7 @@ export const resizeImage = async (
         width: options.width,
         height: options.height,
       })
-      .toFormat(format,{ quality })
+      .toFormat(format, { quality })
       .toBuffer();
 
     return processedImageBuffer;

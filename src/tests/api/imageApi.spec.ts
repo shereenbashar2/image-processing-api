@@ -25,11 +25,7 @@ it('1 should return a 400 error for invalid processing options', async () => {
 
 // Test for Missing Query Parameters
 it('4 should return a 400 error for missing query parameters', async () => {
-
-
-  const response = await request(app)
-    .get('/api/images/process-image')
- 
+  const response = await request(app).get('/api/images/process-image');
 
   expect(response.status).toBe(400);
   // You can check the response body for specific error messages.
@@ -111,8 +107,6 @@ it('3 should return a 404 error for an invalid image name', async () => {
   // Perform assertions on the response
   expect(response.status).toBe(404);
   // You can also check the response body for specific error messages or details.
-
-
 });
 
 afterAll(() => {

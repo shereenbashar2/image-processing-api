@@ -1,62 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const imageUploadForm = document.getElementById("imageUploadForm");
-            const imageInput = document.getElementById("imageInput");
-            const uploadButton = document.getElementById("uploadButton");
-            const status = document.getElementById("status");
-    
-            uploadButton.addEventListener("click", () => {
-                console.log("Upload");
-                const formData = new FormData();
-                formData.append("file", imageInput.files[0]);
-    
-                fetch("/api/images/upload", {
-                    method: "POST",
-                    body: formData,
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        status.innerHTML = data.message;
-                    })
-                    .catch((error) => {
-                        status.innerHTML = "Error: " + error.message;
-                    });
-            });
-        });
-    </script>
-
-<style>
-    /* Style for the file input */
- 
-
-    /* Style for the button */
-    button {
-        background-color: #3498db;
-        color: #fff;
-        padding: 10px 20px;
-        border: none;
-        cursor: pointer;
-    }
-
-    button:hover {
-        background-color: #2980b9;
-    }
-</style>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Upload</title>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Upload and Thumbnails</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Image Upload</h1>
-    <form id="imageUploadForm" enctype="multipart/form-data">
-        <input type="file" id="imageInput" name="file" accept="image/*">
-        
-        <button type="button" id="uploadButton">Upload Image</button>
-    </form>
-    <div id="status"></div>
+
+  <h1>Image Upload and Thumbnails</h1>
+
+  <form id="imageUploadForm">
+    <input type="file" id="imageInput" accept="image/*" required>
+    <label for="quality">Quality (0-100):</label>
+    <input type="number" id="quality" name="quality" min="0" max="100" value="80">
+    <label for="width">Width (max 300):</label>
+    <input type="number" id="width" name="width" min="50" max="300">
+    <label for="height">Height (max 300):</label>
+    <input type="number" id="height" name="height" min="50" max="300">
+    <button type="button" id="uploadButton">Upload and Process</button>
+    
+</form>
+
+
+  <div id="status"></div>
+
+  <div id="resizedImageContainer"></div>
+
+  <script src="app.js"></script>
 </body>
 </html>
-

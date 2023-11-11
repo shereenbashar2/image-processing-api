@@ -21,74 +21,127 @@ const validateImageParameters = () => [
   check('quality').optional().isInt({ min: 0, max: 100 }).toInt(),
 ];
 
+const buildPaths = (
+  imageName: string,
+  format: string,
+  width: number,
+  height: number,
+  imageQuality: number,
+) => {
+  const originalImagePath = path.join(
+    __dirname,
+    '..',
+    imageConfig.originalPath,
+    `${imageName}.${format || imageConfig.defaultFormat}`,
+  );
+
+  const outputFileName = `thumbnail_${imageName}_${imageQuality}_${width}_${height}.${
+    format || imageConfig.defaultFormat
+  }`;
+  const outputFilePath = path.join(
+    __dirname,
+    '..',
+    imageConfig.thumbnailPath,
+    outputFileName,
+  );
+
+  return { originalImagePath, outputFileName, outputFilePath };
+};
+
+const sendCachedImage = (
+  res: Response,
+  format: string,
+  cachedImagePath: string,
+) => {
+  logger.info(`Image found in cache: ${cachedImagePath}`);
+  res.type(`image/${format || 'jpg'}`);
+  res.sendFile(cachedImagePath);
+};
+
+const sendProcessedImage = async (
+  res: Response,
+  imageName: string,
+  outputFilePath: string,
+) => {
+  logger.info(`Image processed: ${imageName}`);
+  res.sendFile(outputFilePath);
+};
+
+const handleErrors = (res: Response, errors: any) => {
+  return res.status(400).json({ errors: errors.array() });
+};
+
 export const processImage = async (req: Request, res: Response) => {
   try {
     const validationRules = validateImageParameters();
-    await Promise.all(validationRules.map(validation => validation.run(req)));
+    await Promise.all(validationRules.map((validation) => validation.run(req)));
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return handleErrors(res, errors);
     }
 
-    const { width, height, imageName, format, quality } = req.query;
+    const { width, height, imageName, format, quality } = req.query as {
+      width?: string;
+      height?: string;
+      imageName?: string;
+      format?: string;
+      quality?: string;
+    };
 
-    logger.info(`Image processing request received: ${imageName}`);
+    // Ensure values are strings or default to empty string
+    const safeWidth = width || '300';
+    const safeHeight = height || '300';
+    const safeImageName = imageName || '';
+    const safeFormat = format || imageConfig.defaultFormat;
+    const safeQuality = quality || `${imageConfig.defaultQuality}`;
 
-    const imageFormat = (format as ImageFormat) || ImageFormat.JPEG;
-    const imageQuality = parseInt(quality as string, 10) || imageConfig.defaultQuality;
+    logger.info(`Image processing request received: ${safeImageName}`);
 
-    const originalImagePath = path.join(
-      __dirname,
-      '..',
-      imageConfig.originalPath,
-      `${imageName}.${format || imageConfig.defaultFormat}`
-    );
+    const imageFormat = safeFormat as ImageFormat;
+    const imageQuality =
+      parseInt(safeQuality, 10) || imageConfig.defaultQuality;
 
-    const outputFileName = `thumbnail_${imageName}_${imageQuality}_${width || 300}_${height || 300}.${format || imageConfig.defaultFormat}`;
-    const outputFilePath = path.join(
-      __dirname,
-      '..',
-      imageConfig.thumbnailPath,
-      outputFileName
+    const { originalImagePath, outputFileName, outputFilePath } = buildPaths(
+      safeImageName,
+      safeFormat,
+      parseInt(safeWidth, 10),
+      parseInt(safeHeight, 10),
+      imageQuality,
     );
 
     const cachedImagePath = getFromCache(outputFileName);
 
     if (cachedImagePath) {
-      logger.info(`Image found in cache: ${imageName}`);
-      res.type(`image/${format || 'jpg'}`);
-      return res.sendFile(cachedImagePath);
+      sendCachedImage(res, safeFormat, cachedImagePath);
+    } else {
+      const originalImageExists = await fs
+        .access(originalImagePath)
+        .then(() => true)
+        .catch(() => false);
+
+      if (!originalImageExists) {
+        return res.status(404).json({ error: 'Image not found' });
+      }
+
+      const processingOptions = {
+        width: parseInt(safeWidth, 10),
+        height: parseInt(safeHeight, 10),
+      };
+
+      const processedImageBuffer = await resizeImage(
+        originalImagePath,
+        processingOptions,
+        imageFormat,
+        imageQuality,
+      );
+
+      await fs.writeFile(outputFilePath, processedImageBuffer);
+
+      addToCache(outputFileName, outputFilePath);
+
+      sendProcessedImage(res, safeImageName, outputFilePath);
     }
-
-    const originalImageExists = await fs
-      .access(originalImagePath)
-      .then(() => true)
-      .catch(() => false);
-
-    if (!originalImageExists) {
-      return res.status(404).json({ error: 'Image not found' });
-    }
-
-    const processingOptions = {
-      width: parseInt(width as string, 10) || 300,
-      height: parseInt(height as string, 10) || 300,
-    };
-
-    const processedImageBuffer = await resizeImage(
-      originalImagePath,
-      processingOptions,
-      imageFormat,
-      imageQuality
-    );
-
-    logger.info(`Image processed: ${imageName}`);
-
-    await fs.writeFile(outputFilePath, processedImageBuffer);
-
-    addToCache(outputFileName, outputFilePath);
-
-    res.sendFile(outputFilePath);
   } catch (error) {
     logger.error('Image processing and saving error:', error);
     res.status(500).json({ error: 'Image processing and saving error' });

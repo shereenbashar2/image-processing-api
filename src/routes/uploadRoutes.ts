@@ -9,7 +9,9 @@ router.post('/upload', upload.single('file'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: 'No file uploaded' });
   }
-  res.status(200).json({ message: 'File uploaded and saved successfully', file: req.file });
+  res
+    .status(200)
+    .json({ message: 'File uploaded and saved successfully', file: req.file });
 });
 
 export default router;
