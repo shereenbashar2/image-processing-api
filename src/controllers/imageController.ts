@@ -58,7 +58,9 @@ const sendCachedImage = (
   cachedImagePath: string,
 ) => {
   logger.info(`Image found in cache: ${cachedImagePath}`);
-  res.type(`image/${format || 'jpg'}`);
+  // res.type(`image/${format || 'jpg'}`);
+  res.type('image/jpeg');
+
   res.sendFile(cachedImagePath);
 };
 
