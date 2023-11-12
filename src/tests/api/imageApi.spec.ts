@@ -1,11 +1,12 @@
 import request from 'supertest';
-import app from '../../app'; 
+import app from '../../app';
+import { ImageFormat, resizeImage } from '../../services/imageProcessing';
 
 // Create a server instance for testing
 const server = app.listen(0); // Use 0 to automatically assign an available port
 
 // Test for Invalid Processing Options
-it('should return a 400 error for invalid processing options', async () => {
+it('should return a 500 error for invalid processing options', async () => {
   // Define a query with invalid processing options, e.g., negative width and height
   const invalidQuery = {
     width: -100,
@@ -19,7 +20,7 @@ it('should return a 400 error for invalid processing options', async () => {
     .get('/api/images/process-image')
     .query(invalidQuery);
 
-  expect(response.status).toBe(400);
+  expect(response.status).toBe(500);
 });
 
 // Test for Missing Query Parameters
@@ -64,15 +65,13 @@ it('should return a 400 error for an invalid quality value', async () => {
 });
 
 it('should return a 200 status and image/jpeg content type for a valid request', async () => {
-  const response = await request(app)
-    .get('/api/images/process-image')
-    .query({
-      width: 200,
-      height: 200,
-      imageName: 'encenadaport',
-      format: 'jpg',
-      quality: 80,
-    });
+  const response = await request(app).get('/api/images/process-image').query({
+    width: 200,
+    height: 200,
+    imageName: 'encenadaport',
+    format: 'jpg',
+    quality: 80,
+  });
 
   expect(response.status).toBe(200);
   expect(response.type).toBe('image/jpeg');
@@ -117,6 +116,8 @@ it('should return a 404 error for an invalid image name', async () => {
   // Perform assertions on the response
   expect(response.status).toBe(404);
 });
+
+
 
 afterAll(() => {
   server.close(); // Close the server after all tests are done

@@ -19,7 +19,8 @@ export const getImageList = async () => {
 
     return thumbnailImages;
   } catch (error) {
-    console.error('Error fetching thumbnail images:', (error as Error).message);
-    throw new Error('Unable to fetch thumbnail images. Please try again later.');
+    throw new Error(
+      'Unable to fetch thumbnail images. Please try again later.',
+    );
   }
 };

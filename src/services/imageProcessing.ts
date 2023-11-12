@@ -25,6 +25,7 @@ export const resizeImage = async (
   quality: number,
 ): Promise<Buffer> => {
   try {
+    console.log('inputFilePath :', inputFilePath);
     // Validate the quality parameter
     if (quality < 0 || quality > 100) {
       throw new Error('Invalid quality value. Should be between 0 and 100.');

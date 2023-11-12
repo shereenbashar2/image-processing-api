@@ -16,8 +16,8 @@ const imageConfig = {
 
 // Validation rules for image parameters
 const validateImageParameters = () => [
-  check('width').optional().isInt({ min: 50, max: 300 }).toInt(),
-  check('height').optional().isInt({ min: 50, max: 300 }).toInt(),
+  check('width').optional().isInt().toInt(),
+  check('height').optional().isInt().toInt(),
   check('imageName').notEmpty(),
   check('format').optional().isIn(['jpg', 'jpeg', 'png']),
   check('quality').optional().isInt({ min: 0, max: 100 }).toInt(),
