@@ -1,6 +1,5 @@
 import request from 'supertest';
 import app from '../../app';
-import { ImageFormat, resizeImage } from '../../services/imageProcessing';
 
 // Create a server instance for testing
 const server = app.listen(0); // Use 0 to automatically assign an available port
@@ -116,8 +115,6 @@ it('should return a 404 error for an invalid image name', async () => {
   // Perform assertions on the response
   expect(response.status).toBe(404);
 });
-
-
 
 afterAll(() => {
   server.close(); // Close the server after all tests are done

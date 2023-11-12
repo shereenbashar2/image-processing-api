@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import path from 'path';
-import { validationResult, check } from 'express-validator';
+import { validationResult, check, ValidationError, Result } from 'express-validator';
 import fs from 'fs/promises';
 import logger from '../utils/logger';
 import { resizeImage, ImageFormat } from '../services/imageProcessing';
@@ -75,10 +75,11 @@ const sendProcessedImage = async (
 };
 
 // Handle validation errors
-const handleErrors = (res: Response, errors: any) => {
+
+
+const handleErrors = (res: Response, errors: Result<ValidationError>) => {
   return res.status(400).json({ errors: errors.array() });
 };
-
 // Controller to process and serve images
 export const processImage = async (req: Request, res: Response) => {
   try {

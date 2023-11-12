@@ -10,7 +10,6 @@ export const getThumbnailImages = async (req: Request, res: Response) => {
     // Send the thumbnail images as a JSON response
     res.json(thumbnailImages);
   } catch (error) {
-    // Log the error for debugging purposes
     console.error(
       'Error in thumbnailController.getThumbnailImages:',
       (error as Error).message,

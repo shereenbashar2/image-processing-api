@@ -3,7 +3,6 @@ import path from 'path';
 import imageRoutes from './routes/imageRoutes';
 import uploadRoutes from './routes/uploadRoutes';
 import * as thumbnailController from './controllers/thumbnailController';
-
 /**
  * Express application setup.
  * @module app
