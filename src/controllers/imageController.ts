@@ -54,13 +54,11 @@ const buildPaths = (
 // Send a cached image response
 const sendCachedImage = (
   res: Response,
-  format: string,
+  _format: string,
   cachedImagePath: string,
 ) : void => {
   logger.info(`Image found in cache: ${cachedImagePath}`);
-  // res.type(`image/${format || 'jpg'}`);
   res.type('image/jpeg');
-
   res.sendFile(cachedImagePath);
 };
 
@@ -79,7 +77,7 @@ const handleErrors = (res: Response, errors: Result<ValidationError>) => {
   return res.status(400).json({ errors: errors.array() });
 };
 // Controller to process and serve images
-export const processImage = async (req: Request, res: Response) => {
+export const processImage = async (req: Request, res: Response): Promise<void | Response>  => {
   try {
     // Validate image parameters
     const validationRules = validateImageParameters();

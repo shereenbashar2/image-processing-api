@@ -1,12 +1,19 @@
-import multer from 'multer';
+
+import multer, { StorageEngine } from 'multer';
 
 // Multer storage configuration
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+const storage:StorageEngine  = multer.diskStorage({
+  destination: function (
+    _req:Express.Request,
+     _file:Express.Multer.File,
+      cb: (error: Error | null, destination: string) => void) {
     // Specify the destination folder for storing original files
     cb(null, 'assets/original/');
   },
-  filename: function (req, file, cb) {
+  filename: function (
+    _req:Express.Request,
+    file:Express.Multer.File, 
+    cb: (error: Error | null, filename: string) => void) {
     // Generate a filename using a timestamp and the original filename
     const timestamp = Date.now();
     cb(null, `${timestamp}-${file.originalname}`);

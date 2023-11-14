@@ -17,6 +17,7 @@ This project is an Image Processing Server that allows users to upload images, p
     - [Process Image](#process-image)
     - [Get Thumbnail Images](#get-thumbnail-images)
 5.[Front End](#Front-End)
+
 ## Introduction
 
 The Image Processing Server allows users to upload images, process them with custom settings, and view the processed thumbnail images.
