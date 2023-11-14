@@ -1,4 +1,4 @@
-import sharp from 'sharp';
+import sharp, { Metadata } from 'sharp';
 
 /**
  * Image formats supported by the resizeImage function.
@@ -43,3 +43,21 @@ export const resizeImage = async (
     throw new Error(`Image processing error: ${(error as Error).message}`);
   }
 };
+
+export interface ImageDimensions {
+  width: number;
+  height: number;
+}
+
+export async function getImageDimensions(
+  imageBuffer: Buffer,
+): Promise<ImageDimensions> {
+  const metadata: Metadata = await sharp(imageBuffer).metadata();
+
+  const dimensions: ImageDimensions = {
+    width: metadata.width || 0, // Use 0 as a default if width is undefined
+    height: metadata.height || 0, // Use 0 as a default if height is undefined
+  };
+
+  return dimensions;
+}

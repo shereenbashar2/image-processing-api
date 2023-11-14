@@ -1,5 +1,9 @@
 import app from '../../app';
-import { ImageFormat, resizeImage } from '../../services/imageProcessing';
+import {
+  ImageFormat,
+  getImageDimensions,
+  resizeImage,
+} from '../../services/imageProcessing';
 import * as path from 'path';
 
 // Create a server instance for testing
@@ -40,6 +44,10 @@ describe('Image Processing Service', () => {
     );
     // Add assertions to check the dimensions or properties of the resized image buffer
     expect(resizedImageBuffer.length).toBeGreaterThan(0);
+    // Add assertions to check the dimensions or properties of the resized image buffer
+    const { width, height } = await getImageDimensions(resizedImageBuffer);
+    expect(width).toBe(processingOptions.width);
+    expect(height).toBe(processingOptions.height);
   });
 
   it('should resize a PNG image successfully', async () => {
@@ -60,6 +68,10 @@ describe('Image Processing Service', () => {
 
     // Add assertions to check the dimensions or properties of the resized image buffer
     expect(resizedImageBuffer.length).toBeGreaterThan(0);
+    // Add assertions to check the dimensions or properties of the resized image buffer
+    const { width, height } = await getImageDimensions(resizedImageBuffer);
+    expect(width).toBe(processingOptions.width);
+    expect(height).toBe(processingOptions.height);
   });
 });
 

@@ -6,17 +6,17 @@ This project is an Image Processing Server that allows users to upload images, p
 
 1. [Introduction](#introduction)
 2. [Getting Started](#getting-started)
-    - [Prerequisites](#prerequisites)
-    - [Installation](#installation)
+   - [Prerequisites](#prerequisites)
+   - [Installation](#installation)
 3. [Scripts](#scripts)
-    - [Test](#test)
-    - [Start](#start)
-    - [Build](#build)
+   - [Test](#test)
+   - [Start](#start)
+   - [Build](#build)
 4. [API Endpoints](#api-endpoints)
-    - [Upload Image](#upload-image)
-    - [Process Image](#process-image)
-    - [Get Thumbnail Images](#get-thumbnail-images)
-5.[Front End](#Front-End)
+   - [Upload Image](#upload-image)
+   - [Process Image](#process-image)
+   - [Get Thumbnail Images](#get-thumbnail-images)
+5. [Front End](#front-end)
 
 ## Introduction
 
@@ -90,5 +90,19 @@ Method: GET
 Path: /api/images/thumbnails
 
 
-## Front End
+### Front End
 URL: localhost:3000
+
+The Front End of the Image Processing Server provides a user-friendly interface for managing images, including uploading, processing, and viewing thumbnails.
+
+## Uploading More Images
+Users can upload additional images directly through the Front End. When new images are uploaded, they are stored in the assets/original directory.
+
+## Displaying Thumbnails
+Thumbnail images are automatically generated for the uploaded images and are stored in a dedicated thumbnails directory. These thumbnails provide a quick preview of the processed images.
+
+## Image Processing Options
+Users can select how to process a specific image by utilizing the Image Processing Options feature. This includes choosing the output  setting the quality level (0 to 100), and specifying the desired width and height for the processed image.
+
+
+
