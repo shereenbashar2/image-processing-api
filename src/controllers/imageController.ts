@@ -79,7 +79,7 @@ const handleErrors = (res: Response, errors: Result<ValidationError>) => {
   return res.status(400).json({ errors: errors.array() });
 };
 // Controller to process and serve images
-export const processImage = async (req: Request, res: Response):  => {
+export const processImage = async (req: Request, res: Response) => {
   try {
     // Validate image parameters
     const validationRules = validateImageParameters();
