@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import path from 'path';
-import { validationResult, check, ValidationError, Result } from 'express-validator';
+import { validationResult, check, ValidationError, Result, ValidationChain } from 'express-validator';
 import fs from 'fs/promises';
 import logger from '../utils/logger';
 import { resizeImage, ImageFormat } from '../services/imageProcessing';
@@ -15,11 +15,11 @@ const imageConfig = {
 };
 
 // Validation rules for image parameters
-const validateImageParameters = () => [
+const validateImageParameters = (): Array<ValidationChain> =>[
   check('width').optional().isInt().toInt(),
   check('height').optional().isInt().toInt(),
   check('imageName').notEmpty(),
-  check('format').optional().isIn(['jpg', 'jpeg', 'png']),
+  check('format').optional().isIn(['jpg', 'jpeg', 'png', 'JPG', 'JPEG', 'PNG']),
   check('quality').optional().isInt({ min: 0, max: 100 }).toInt(),
 ];
 
@@ -31,17 +31,17 @@ const buildPaths = (
   height: number,
   imageQuality: number,
 ) => {
-  const originalImagePath = path.join(
+  const originalImagePath:string = path.join(
     __dirname,
     '..',
     imageConfig.originalPath,
     `${imageName}.${format || imageConfig.defaultFormat}`,
   );
 
-  const outputFileName = `thumbnail_${imageName}_${imageQuality}_${width}_${height}.${
+  const outputFileName:string = `thumbnail_${imageName}_${imageQuality}_${width}_${height}.${
     format || imageConfig.defaultFormat
   }`;
-  const outputFilePath = path.join(
+  const outputFilePath:string  = path.join(
     __dirname,
     '..',
     imageConfig.thumbnailPath,
@@ -56,7 +56,7 @@ const sendCachedImage = (
   res: Response,
   format: string,
   cachedImagePath: string,
-) => {
+) : void => {
   logger.info(`Image found in cache: ${cachedImagePath}`);
   // res.type(`image/${format || 'jpg'}`);
   res.type('image/jpeg');
@@ -69,19 +69,17 @@ const sendProcessedImage = async (
   res: Response,
   imageName: string,
   outputFilePath: string,
-) => {
+): Promise<void> => {
   logger.info(`Image processed: ${imageName}`);
   res.sendFile(outputFilePath);
 };
 
 // Handle validation errors
-
-
 const handleErrors = (res: Response, errors: Result<ValidationError>) => {
   return res.status(400).json({ errors: errors.array() });
 };
 // Controller to process and serve images
-export const processImage = async (req: Request, res: Response) => {
+export const processImage = async (req: Request, res: Response):  => {
   try {
     // Validate image parameters
     const validationRules = validateImageParameters();
@@ -101,11 +99,11 @@ export const processImage = async (req: Request, res: Response) => {
     };
 
     // Ensure values are strings or default to empty string
-    const safeWidth = width || '300';
-    const safeHeight = height || '300';
-    const safeImageName = imageName || '';
-    const safeFormat = format || imageConfig.defaultFormat;
-    const safeQuality = quality || `${imageConfig.defaultQuality}`;
+    const safeWidth :string= width || '300';
+    const safeHeight :string= height || '300';
+    const safeImageName:string = imageName || '';
+    const safeFormat:string = format || imageConfig.defaultFormat;
+    const safeQuality:string = quality || `${imageConfig.defaultQuality}`;
 
     logger.info(`Image processing request received: ${safeImageName}`);
 

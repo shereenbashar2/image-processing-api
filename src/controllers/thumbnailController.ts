@@ -10,12 +10,8 @@ export const getThumbnailImages = async (req: Request, res: Response) => {
     // Send the thumbnail images as a JSON response
     res.json(thumbnailImages);
   } catch (error) {
-    console.error(
-      'Error in thumbnailController.getThumbnailImages:',
-      (error as Error).message,
-    );
-
-    // Return a 500 Internal Server Error response with a generic error message
+    
+    throw new Error(`Image List error: ${(error as Error).message}`);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };

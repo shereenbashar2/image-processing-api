@@ -10,8 +10,9 @@ import * as thumbnailController from './controllers/thumbnailController';
  */
 const app = express();
 
+//console.log("public:", path.join(__dirname, '../public'));
 // Middleware to serve static files (like index.html)
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../public')));
 
 // Middleware for parsing JSON in requests
 app.use(express.json());
@@ -36,7 +37,7 @@ app.get('/api/images/thumbnails', (req, res) => {
   try {
     thumbnailController.getThumbnailImages(req, res);
   } catch (error) {
-    console.error('Error in thumbnail route:', error);
+    // console.error('Error in thumbnail route:', error);
     res.status(500).send('Internal Server Error');
   }
 });
