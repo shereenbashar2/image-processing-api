@@ -1,5 +1,5 @@
 import { createLogger, transports, format, Logger } from 'winston';
-const logger:Logger  = createLogger({
+const logger: Logger = createLogger({
   level: 'info', // Set the log level as needed
   format: format.combine(
     format.colorize(),

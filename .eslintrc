@@ -19,6 +19,7 @@
       "@typescript-eslint/no-inferrable-types": [0],
       "no-console": "error",
       "@typescript-eslint/no-explicit-any": "error",
+      
       "valid-jsdoc": "off",
       "semi": [2, "always"],
       "keyword-spacing": ["error", {"after": true}],
